@@ -29,9 +29,14 @@
             <div class="hero">
                 <h3>Featured Match</h3>
                 <div class="match-card">
+                    <div class="match-logos">
+                        <img src="https://via.placeholder.com/30?text=MU" alt="Manchester United Logo">
+                        <span>vs</span>
+                        <img src="https://via.placeholder.com/30?text=LV" alt="Liverpool Logo">
+                    </div>
                     <h4>Live: Premier League</h4>
                     <p>Manchester United vs Liverpool</p>
-                    <button onclick="selectChannel(0)">Watch Now</button>
+                    <button onclick="selectChannel(0, 'channelListPlayer')">Watch Now</button>
                 </div>
             </div>
         </div>
@@ -39,35 +44,50 @@
             <h2>Live Now</h2>
             <div class="live-matches">
                 <div class="match-card">
+                    <div class="match-logos">
+                        <img src="https://via.placeholder.com/30?text=AR" alt="Arsenal Logo">
+                        <span>vs</span>
+                        <img src="https://via.placeholder.com/30?text=CH" alt="Chelsea Logo">
+                    </div>
                     <h4>Premier League</h4>
                     <p>Arsenal vs Chelsea</p>
-                    <button onclick="selectChannel(0)">Watch Now</button>
+                    <button onclick="selectChannel(0, 'channelListPlayer')">Watch Now</button>
                 </div>
                 <div class="match-card">
+                    <div class="match-logos">
+                        <img src="https://via.placeholder.com/30?text=RM" alt="Real Madrid Logo">
+                        <span>vs</span>
+                        <img src="https://via.placeholder.com/30?text=BA" alt="Barcelona Logo">
+                    </div>
                     <h4>La Liga</h4>
                     <p>Real Madrid vs Barcelona</p>
-                    <button onclick="selectChannel(1)">Watch Now</button>
+                    <button onclick="selectChannel(1, 'channelListPlayer')">Watch Now</button>
                 </div>
             </div>
         </div>
         <div id="channel-list" class="page">
             <h2>Channel List</h2>
-            <div class="channel-list" id="channelList">
-                <div id="loading">Loading available channels...</div>
-            </div>
-            <div class="player-container">
-                <div class="video-glow"></div>
-                <video id="videoPlayer" controls></video>
+            <div class="channel-player-container">
+                <div class="channel-list" id="channelList">
+                    <div id="loading">Loading available channels...</div>
+                </div>
+                <div class="player-container">
+                    <div class="video-glow"></div>
+                    <video id="channelListPlayer" controls></video>
+                </div>
             </div>
         </div>
         <div id="other-channels" class="page">
             <h2>Other Channels</h2>
             <p>Explore more entertainment options, including news, lifestyle, and music channels.</p>
-            <div class="other-channels-list">
-                <div class="channel-item">Sky News - News</div>
-                <div class="channel-item">Red Bull TV - Sports</div>
-                <div class="channel-item">Tastemade - Lifestyle</div>
-                <div class="channel-item">30A Music - Music</div>
+            <div class="channel-player-container">
+                <div class="other-channels-list" id="otherChannelsList">
+                    <div id="otherLoading">Loading other channels...</div>
+                </div>
+                <div class="player-container">
+                    <div class="video-glow"></div>
+                    <video id="otherChannelsPlayer" controls></video>
+                </div>
             </div>
         </div>
     </div>
