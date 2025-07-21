@@ -1,57 +1,3 @@
-const channels = [
-    {
-        name: "Premier League TV",
-        category: "Football",
-        url: "https://difwk89tryvik.cloudfront.net/v1/master/dfe581e0a446a1e548014078b2d81b62b917979d/KRON_AD_CAMPAIGN/index.m3u8",
-        logo: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f2/Premier_League_Logo.svg/420px-Premier_League_Logo.svg.png"
-    },
-    {
-        name: "La Liga TV",
-        category: "Football",
-        url: "https://content.uplynk.com/channel/ext/4413701bf5a1488db55b767f8ae9d4fa/kgo_24x7_news.m3u8",
-        logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/LaLiga_EA_Sports_2023_Vertical_Logo.svg/500px-LaLiga_EA_Sports_2023_Vertical_Logo.svg.png"
-    },
-    {
-        name: "Sky Sports",
-        category: "Football",
-        url: "https://skynewsau-live.akamaized.net/hls/live/2002689/skynewsau-extra1/master.m3u8",
-        logo: "https://via.placeholder.com/24?text=SS"
-    },
-    {
-        name: "ESPN Football",
-        category: "Football",
-        url: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8",
-        logo: "https://via.placeholder.com/24?text=ESPN"
-    }
-];
-
-const otherChannels = [
-    {
-        name: "Sky News",
-        category: "News",
-        url: "https://skynewsau-live.akamaized.net/hls/live/2002689/skynewsau-extra1/master.m3u8",
-        logo: "https://via.placeholder.com/24?text=SN"
-    },
-    {
-        name: "Red Bull TV",
-        category: "Sports",
-        url: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8",
-        logo: "https://via.placeholder.com/24?text=RB"
-    },
-    {
-        name: "Tastemade",
-        category: "Lifestyle",
-        url: "https://tastemadessai.akamaized.net/amagi_hls_data_tastemade-tastemade/CDN/playlist.m3u8",
-        logo: "https://via.placeholder.com/24?text=TM"
-    },
-    {
-        name: "30A Music",
-        category: "Music",
-        url: "https://30a-tv.com/feeds/ceftech/30atvmusic.m3u8",
-        logo: "https://via.placeholder.com/24?text=30A"
-    }
-];
-
 const channelList = document.getElementById("channelList");
 const otherChannelsList = document.getElementById("otherChannelsList");
 const channelListPlayer = document.getElementById("channelListPlayer");
@@ -80,9 +26,26 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Dev tools detection
+(function() {
+    const devtools = /./;
+    devtools.toString = function() {
+        alert("Developer tools are disabled for security reasons.");
+        window.location.reload();
+        return '';
+    };
+    setInterval(() => {
+        console.log(devtools);
+    }, 1000);
+})();
+
+function decodeUrl(encodedUrl) {
+    return atob(encodedUrl);
+}
+
 function loadChannels() {
     loading.style.display = "none";
-    channels.forEach((channel, index) => {
+    _0x1234.forEach((channel, index) => {
         const channelItem = document.createElement("div");
         channelItem.className = "channel-item fade-in";
         channelItem.style.animationDelay = `${index * 0.05}s`;
@@ -102,7 +65,7 @@ function loadChannels() {
 
 function loadOtherChannels() {
     otherLoading.style.display = "none";
-    otherChannels.forEach((channel, index) => {
+    _0x5678.forEach((channel, index) => {
         const channelItem = document.createElement("div");
         channelItem.className = "channel-item fade-in";
         channelItem.style.animationDelay = `${index * 0.05}s`;
@@ -122,12 +85,13 @@ function loadOtherChannels() {
 
 function selectChannel(index, playerId) {
     currentChannelIndex = index;
-    const selectedChannel = channels[index];
+    const selectedChannel = _0x1234[index];
     const videoPlayer = document.getElementById(playerId);
     const videoGlow = videoPlayer.parentElement.querySelector(".video-glow");
+    const decodedUrl = decodeUrl(selectedChannel.url);
     if (Hls.isSupported()) {
         const hls = new Hls();
-        hls.loadSource(selectedChannel.url);
+        hls.loadSource(decodedUrl);
         hls.attachMedia(videoPlayer);
         hls.on(Hls.Events.MANIFEST_PARSED, function () {
             videoPlayer.play().catch(error => {
@@ -139,7 +103,7 @@ function selectChannel(index, playerId) {
             alert("Error loading channel: " + selectedChannel.name);
         });
     } else if (videoPlayer.canPlayType("application/vnd.apple.mpegurl")) {
-        videoPlayer.src = selectedChannel.url;
+        videoPlayer.src = decodedUrl;
         videoPlayer.addEventListener("loadedmetadata", function () {
             videoPlayer.play().catch(error => {
                 console.error("Playback error:", error);
@@ -170,24 +134,25 @@ function selectChannel(index, playerId) {
 
 function selectOtherChannel(index) {
     currentOtherChannelIndex = index;
-    const selectedChannel = otherChannels[index];
+    const selectedChannel = _0x5678[index];
     const videoPlayer = otherChannelsPlayer;
     const videoGlow = videoPlayer.parentElement.querySelector(".video-glow");
+    const decodedUrl = decodeUrl(selectedChannel.url);
     if (Hls.isSupported()) {
         const hls = new Hls();
-        hls.loadSource(selectedChannel.url);
+        hls.loadSource(decodedUrl);
         hls.attachMedia(videoPlayer);
-        hls.on(Hls.Events.MANIFEST_PARSED, function () /*{
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
             videoPlayer.play().catch(error => {
                 console.error("Playback error:", error);
             });
-        });*/
+        });
         hls.on(Hls.Events.ERROR, function (event, data) {
             console.error("HLS error:", data);
             alert("Error loading channel: " + selectedChannel.name);
         });
     } else if (videoPlayer.canPlayType("application/vnd.apple.mpegurl")) {
-        videoPlayer.src = selectedChannel.url;
+        videoPlayer.src = decodedUrl;
         videoPlayer.addEventListener("loadedmetadata", function () {
             videoPlayer.play().catch(error => {
                 console.error("Playback error:", error);
@@ -277,7 +242,7 @@ document.addEventListener("keydown", (e) => {
             }
         } else if (e.key === "ArrowDown") {
             e.preventDefault();
-            if (currentChannelIndex < channels.length - 1) {
+            if (currentChannelIndex < _0x1234.length - 1) {
                 selectChannel(currentChannelIndex + 1, "channelListPlayer");
             }
         }
@@ -289,17 +254,17 @@ document.addEventListener("keydown", (e) => {
             }
         } else if (e.key === "ArrowDown") {
             e.preventDefault();
-            if (currentOtherChannelIndex < otherChannels.length - 1) {
+            if (currentOtherChannelIndex < _0x5678.length - 1) {
                 selectOtherChannel(currentOtherChannelIndex + 1);
             }
         }
     }
 });
 
-if (channels.length > 0) {
+if (_0x1234.length > 0) {
     selectChannel(0, "channelListPlayer");
 }
-if (otherChannels.length > 0) {
+if (_0x5678.length > 0) {
     selectOtherChannel(0);
 }
 
