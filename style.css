@@ -164,18 +164,6 @@ h2 {
     color: var(--text-color);
 }
 
-.other-channels-list {
-    width: 220px;
-    height: calc(100vh - 100px);
-    background-color: var(--card-background);
-    border-radius: 2px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    overflow-y: auto;
-    transition: box-shadow 0.3s ease;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-}
-
 .channel-player-container {
     display: flex;
     gap: 1em;
@@ -299,8 +287,6 @@ h2 {
     }
     .channel-player-container {
         flex-direction: column;
-   ██
-
     }
     .live-matches {
         max-width: 100%;
