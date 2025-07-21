@@ -27,7 +27,7 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Dev tools detection
-(function() {
+/*(function() {
     const devtools = /./;
     devtools.toString = function() {
         alert("Developer tools are disabled for security reasons.");
@@ -37,7 +37,7 @@ document.addEventListener('keydown', (e) => {
     setInterval(() => {
         console.log(devtools);
     }, 1000);
-})();
+})();*/
 
 function decodeUrl(encodedUrl) {
     return atob(encodedUrl);
