@@ -255,7 +255,7 @@
 <body>
     <div class="background"></div>
     <div class="navbar">
-        <h1>StreamXI</h1>
+        <h1 id="homeTitle" style="cursor:pointer;">StreamXI</h1>
     </div>
     <button class="categories-button" id="categoriesButton">Back</button>
     <div class="container">
@@ -327,6 +327,7 @@
         const videoPlayer = document.getElementById("videoPlayer");
         const loading = document.getElementById("loading");
         const categoriesButton = document.getElementById("categoriesButton");
+        const homeTitle = document.getElementById("homeTitle"); // Add this line
 
         function loadChannels(category) {
             loading.style.display = "flex";
@@ -402,6 +403,23 @@
             categoriesButton.style.display = "none";
         }
 
+        // Add this function to reset to homepage
+        function goToHomepage() {
+            // Hide channel list and show categories
+            channelList.style.display = "none";
+            channelList.classList.remove("active");
+            categoryList.style.display = "block";
+            categoryList.classList.add("active");
+            categoriesButton.style.display = "none";
+            // Optionally, stop video playback and hide player
+            videoPlayer.pause();
+            videoPlayer.removeAttribute('src');
+            videoPlayer.load();
+            // Remove or comment out the next line to keep the player visible:
+            // videoPlayer.style.opacity = "0";
+            videoPlayer.style.opacity = "1"; // Always show the player
+        }
+
         categoryList.addEventListener("click", (e) => {
             if (e.target.classList.contains("category-item")) {
                 const category = e.target.getAttribute("data-category");
@@ -410,6 +428,7 @@
         });
 
         categoriesButton.addEventListener("click", showCategories);
+        homeTitle.addEventListener("click", goToHomepage); // Add this line
 
         // Ensure categories are visible on page load
         categoryList.style.display = "block";
