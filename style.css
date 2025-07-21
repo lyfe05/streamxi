@@ -96,45 +96,51 @@ h2 {
     margin-bottom: 1em;
 }
 
-.hero, .live-matches, .other-channels-list {
+.live-matches {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 1em;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.match-card, .other-channels-list .channel-item {
+.match-card {
     background-color: var(--card-background);
-    padding: 1em;
-    border-radius: 8px;
+    padding: 1.5em;
+    border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
+    width: 100%;
 }
 
-.match-card:hover, .other-channels-list .channel-item:hover {
+.match-card:hover {
     transform: translateY(-5px);
 }
 
 .match-card h4 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.5em;
 }
 
 .match-card p {
     margin: 0.5em 0;
     color: #aaa;
+    font-size: 1.1em;
 }
 
 .match-card button {
     background-color: var(--primary-color);
     color: white;
     border: none;
-    padding: 0.5em 1em;
-    border-radius: 4px;
+    padding: 0.75em 1.5em;
+    border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    align-self: flex-start;
 }
 
 .match-card button:hover {
@@ -144,13 +150,30 @@ h2 {
 .match-logos {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: 0.75em;
 }
 
 .match-logos img {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+}
+
+.match-logos span {
+    font-size: 1.2em;
+    color: var(--text-color);
+}
+
+.other-channels-list {
+    width: 220px;
+    height: calc(100vh - 100px);
+    background-color: var(--card-background);
+    border-radius: 2px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    transition: box-shadow 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
 .channel-player-container {
@@ -276,6 +299,14 @@ h2 {
     }
     .channel-player-container {
         flex-direction: column;
+   ██
+
+    }
+    .live-matches {
+        max-width: 100%;
+    }
+    .match-card {
+        width: 100%;
     }
     nav ul {
         flex-direction: column;
