@@ -25,7 +25,7 @@
             background-color: var(--background-color);
             color: var(--text-color);
             transition: background-color 0.3s ease;
-            overflow: hidden;
+            /* overflow: hidden; */ /* Remove this line to allow scrolling */
         }
 
         .background {
@@ -100,6 +100,7 @@
             margin: 1em auto;
             padding: 0 2em;
             animation: slideIn 0.5s ease forwards;
+            min-height: 80vh; /* Add min-height for better scrolling */
         }
 
         .category-list, .channel-list {
@@ -244,6 +245,10 @@
         @keyframes slideIn {
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+
+        html, body {
+            height: 100%;
         }
     </style>
 </head>
