@@ -177,11 +177,11 @@ function selectOtherChannel(index) {
         const hls = new Hls();
         hls.loadSource(selectedChannel.url);
         hls.attachMedia(videoPlayer);
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        hls.on(Hls.Events.MANIFEST_PARSED, function () /*{
             videoPlayer.play().catch(error => {
                 console.error("Playback error:", error);
             });
-        });
+        });*/
         hls.on(Hls.Events.ERROR, function (event, data) {
             console.error("HLS error:", data);
             alert("Error loading channel: " + selectedChannel.name);
