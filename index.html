@@ -260,12 +260,12 @@
     <button class="categories-button" id="categoriesButton">Back</button>
     <div class="container">
         <div class="category-list active" id="categoryList">Categories:
-            <div class="category-item" data-category="News">News</div>
+            <div class="category-item" data-category="Live Match">Live matches</div>
             <div class="category-item" data-category="Sports">Sports</div>
             <div class="category-item" data-category="Music">Music</div>
-            <div class="category-item" data-category="Lifestyle">Lifestyle</div>
+            <div class="category-item" data-category="News">News</div>
             <div class="category-item" data-category="Movies">Movies</div>
-            <div class="category-item" data-category="Comics">Comics</div>
+            <div class="category-item" data-category="Kids">Kids</div>
         </div>
         <div class="channel-list" id="channelList">Channels:
             <div id="loading"><span class="spinner"></span>Loading channels...</div>
@@ -279,10 +279,22 @@
     <script>
         const channels = [
             {
-                name: "KRON SF",
-                category: "News",
-                logo: "https://example.com/logo1.png",
-                url: "https://difwk89tryvik.cloudfront.net/v1/master/dfe581e0a446a1e548014078b2d81b62b917979d/KRON_AD_CAMPAIGN/index.m3u8"
+                name: "TNT Sports 1",
+                category: "Sports",
+                logo: "https://media.info/l/o/1/1539.1690027797.png",
+                url: "http://kostya.rostelekom.xyz/iptv/AMZ45QM6EHM7KSRCK9PYH5UZ/6566/index.m3u8"
+            },
+            {
+                name: "TNT Sports 2",
+                category: "Sports",
+                logo: "https://media.info/l/o/1/1540.1690027877.png",
+                url: "http://kostya.rostelekom.xyz/iptv/AMZ45QM6EHM7KSRCK9PYH5UZ/6556/index.m3u8"
+            },
+            {
+                name: "TNT Sports 3",
+                category: "Sports",
+                logo: "https://media.info/l/o/5/5712.1690027954.png",
+                url: "https://crichdplaylist.extratvteam.workers.dev/master.m3u8?cid=bbtsp3"
             },
             {
                 name: "KGO SF",
@@ -298,7 +310,7 @@
             },
             {
                 name: "Tastemade",
-                category: "Lifestyle",
+                category: "News",
                 logo: "https://example.com/logo4.png",
                 url: "https://tastemadessai.akamaized.net/amagi_hls_data_tastemade-tastemade/CDN/playlist.m3u8"
             },
@@ -316,7 +328,7 @@
             },
             {
                 name: "Adult Swim Toonami",
-                category: "Comics",
+                category: "News",
                 logo: "https://example.com/logo7.png",
                 url: "https://adultswim-vodlive.cdn.turner.com/live/toonami/stream.m3u8"
             }
