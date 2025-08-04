@@ -1,453 +1,280 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamXI</title>
-    <style>
-        @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap");
-
-        :root {
-            --primary-color: #00a8ff;
-            --secondary-color: #ff6b6b;
-            --background-color: #0f0f1e;
-            --text-color: #e0e0e0;
-            --card-background: rgba(30, 30, 50, 0.7);
-            --scrollbar-thumb: #4a4a6a;
-            --scrollbar-track: #2a2a3a;
-            --hover-glow: 0 0 10px rgba(0, 168, 255, 0.5);
-        }
-
-        body {
-            font-family: "Montserrat", sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            transition: background-color 0.3s ease;
-            /* overflow: hidden; */ /* Remove this line to allow scrolling */
-        }
-
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(255, 107, 107, 0.1));
-            animation: gradientShift 15s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1em 2em;
-            background-color: var(--card-background);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .navbar h1 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 24px;
-            color: var(--primary-color);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .categories-button {
-            display: none;
-            padding: 0.5em 1em;
-            background-color: var(--secondary-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000; /* Increased z-index to ensure visibility */
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            animation: pulse 2s ease infinite; /* Added pulse animation */
-        }
-
-        .categories-button:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--hover-glow);
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .container {
-            display: flex;
-            max-width: 1200px;
-            margin: 1em auto;
-            padding: 0 2em;
-            animation: slideIn 0.5s ease forwards;
-            min-height: 80vh; /* Add min-height for better scrolling */
-        }
-
-        .category-list, .channel-list {
-            width: 300px;
-            background-color: var(--card-background);
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            scrollbar-width: thin;
-            scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-            margin-right: 1em;
-        }
-
-        .category-list.active, .channel-list.active {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .category-list:not(.active), .channel-list:not(.active) {
-            transform: translateX(-20px);
-            opacity: 0;
-        }
-
-        .category-list::-webkit-scrollbar, .channel-list::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .category-list::-webkit-scrollbar-track, .channel-list::-webkit-scrollbar-track {
-            background: var(--scrollbar-track);
-        }
-
-        .category-list::-webkit-scrollbar-thumb, .channel-list::-webkit-scrollbar-thumb {
-            background-color: var(--scrollbar-thumb);
-            border-radius: 4px;
-        }
-
-        .category-item, .channel-item {
-            padding: 0.75em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 3px solid transparent;
-        }
-
-        .category-item:hover, .channel-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid var(--primary-color);
-            transform: translateX(5px);
-        }
-
-        .channel-item {
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .channel-logo {
-            width: 32px;
-            height: 32px;
-            margin-right: 12px;
-            border-radius: 8px;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .channel-item:hover .channel-logo {
-            transform: scale(1.1);
-        }
-
-        .player-container {
-            flex-grow: 1;
-            position: relative;
-            width: 100%;
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards 0.3s;
-        }
-
-        #videoPlayer {
-            width: 90%;
-            height: 500px; /* Set height for the video player */
-            background-color: #000;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        #videoPlayer:hover {
-            box-shadow: var(--hover-glow);
-            transform: scale(1.01);
-        }
-
-        #loading {
-            text-align: center;
-            font-size: 1.2em;
-            margin-top: 2em;
-            color: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5em;
-        }
-
-        .spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid var(--primary-color);
-            border-top: 3px solid transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-                padding: 0 1em;
-            }
-            .category-list, .channel-list {
-                width: 100%;
-                margin-right: 0;
-                margin-bottom: 1em;
-            }
-            .navbar {
-                flex-direction: column;
-                gap: 0.5em;
-            }
-        }
-
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        html, body {
-            height: 100%;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Notification Manager</title>
+  <style>
+    :root {
+      --primary: #0f3c6e;
+      --accent: #f6b800;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: var(--bg);
+      font-family: "Segoe UI", sans-serif;
+      color: var(--primary);
+    }
+    h2 {
+      color: var(--primary);
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      margin: 5px 2px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    button:hover {
+      background: var(--accent);
+      color: black;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 200px;
+      font-family: monospace;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .section-title {
+      margin-top: 0;
+      font-size: 18px;
+      color: var(--primary);
+    }
+    .error {
+      color: red;
+      font-size: 14px;
+      margin: 5px 0;
+    }
+    .note {
+      font-size: 12px;
+      color: #555;
+      margin: 5px 0;
+    }
+  </style>
 </head>
 <body>
-    <div class="background"></div>
-    <div class="navbar">
-        <h1 id="homeTitle" style="cursor:pointer;">StreamXI</h1>
-    </div>
-    <button class="categories-button" id="categoriesButton">Back</button>
-    <div class="container">
-        <div class="category-list active" id="categoryList">Categories:
-            <div class="category-item" data-category="Live Match">Live matches</div>
-            <div class="category-item" data-category="Sports">Sports</div>
-            <div class="category-item" data-category="Music">Music</div>
-            <div class="category-item" data-category="News">News</div>
-            <div class="category-item" data-category="Movies">Movies</div>
-            <div class="category-item" data-category="Kids">Kids</div>
-        </div>
-        <div class="channel-list" id="channelList">Channels:
-            <div id="loading"><span class="spinner"></span>Loading channels...</div>
-        </div>
-        <div class="player-container">
-            <video id="videoPlayer" controls></video>
-        </div>
-    </div>
+  <h2>📢 Notification Manager</h2>
+  <div class="card">
+    <button onclick="previewNotification()">🔍 Preview Notification</button>
+    <button onclick="showEditForm()">✏️ Edit Notification</button>
+  </div>
+  <div id="formSection" class="card"></div>
+  <div id="previewSection" class="card"></div>
+  <script>
+    const notificationUrl = "https://raw.githubusercontent.com/lyfe05/RandomProject/refs/heads/main/message.json";
+    const repoOwner = "lyfe05";
+    const repoName = "RandomProject";
+    const filePath = "message.json";
+    const branch = "main";
+    let notificationData = {};
+    let githubToken = null;
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script>
-        const channels = [
-            {
-                name: "TNT Sports 1",
-                category: "Sports",
-                logo: "https://media.info/l/o/1/1539.1690027797.png",
-                url: "https://d2.merichunidya.com:1686/hls/bbtsp1.m3u8?md5=ta7YV3RDpOz66R70U9J_8A&expires=1753362415"
-            },
-            {
-                name: "TNT Sports 2",
-                category: "Sports",
-                logo: "https://media.info/l/o/1/1540.1690027877.png",
-                url: "http://kostya.rostelekom.xyz/iptv/AMZ45QM6EHM7KSRCK9PYH5UZ/6556/index.m3u8"
-            },
-            {
-                name: "TNT Sports 3",
-                category: "Sports",
-                logo: "https://media.info/l/o/5/5712.1690027954.png",
-                url: "https://crichdplaylist.extratvteam.workers.dev/master.m3u8?cid=bbtsp3"
-            },
-            {
-                name: "KGO SF",
-                category: "News",
-                logo: "https://example.com/logo2.png",
-                url: "https://content.uplynk.com/channel/ext/4413701bf5a1488db55b767f8ae9d4fa/kgo_24x7_news.m3u8"
-            },
-            {
-                name: "Red Bull TV",
-                category: "Sports",
-                logo: "https://example.com/logo3.png",
-                url: "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8"
-            },
-            {
-                name: "Tastemade",
-                category: "News",
-                logo: "https://example.com/logo4.png",
-                url: "https://tastemadessai.akamaized.net/amagi_hls_data_tastemade-tastemade/CDN/playlist.m3u8"
-            },
-            {
-                name: "Rakuten TV Action",
-                category: "Movies",
-                logo: "https://example.com/logo5.png",
-                url: "https://rakuten-actionmovies-1-eu.rakuten.wurl.tv/playlist.m3u8"
-            },
-            {
-                name: "Ultimate Music Ch",
-                category: "Music",
-                logo: "https://example.com/logo6.png",
-                url: "https://app.viloud.tv/hls/channel/0694b92d093cc2bd5438ff9bbccaf1a2.m3u8"
-            },
-            {
-                name: "Adult Swim Toonami",
-                category: "News",
-                logo: "https://example.com/logo7.png",
-                url: "https://adultswim-vodlive.cdn.turner.com/live/toonami/stream.m3u8"
-            }
-        ];
+    function getCurrentUTCTime() {
+      return new Date().toISOString();
+    }
 
-        const categoryList = document.getElementById("categoryList");
-        const channelList = document.getElementById("channelList");
-        const videoPlayer = document.getElementById("videoPlayer");
-        const loading = document.getElementById("loading");
-        const categoriesButton = document.getElementById("categoriesButton");
-        const homeTitle = document.getElementById("homeTitle"); // Add this line
-
-        function loadChannels(category) {
-            loading.style.display = "flex";
-            setTimeout(() => {
-                loading.style.display = "none";
-                channelList.innerHTML = "";
-                const filteredChannels = channels.filter(channel => channel.category === category);
-                if (filteredChannels.length === 0) {
-                    channelList.innerHTML = "<div>No channels available in this category.</div>";
-                    return;
-                }
-                filteredChannels.forEach((channel, index) => {
-                    const channelItem = document.createElement("div");
-                    channelItem.className = "channel-item fade-in";
-                    channelItem.style.animationDelay = `${index * 0.05}s`;
-                    channelItem.innerHTML = `
-                        <img src="${channel.logo}" alt="${channel.name} logo" class="channel-logo">
-                        <div>
-                            <div class="channel-name">${channel.name}</div>
-                            <div class="channel-category">${channel.category}</div>
-                        </div>
-                    `;
-                    channelItem.addEventListener("click", () => {
-                        selectChannel(channel);
-                    });
-                    channelList.appendChild(channelItem);
-                });
-                channelList.style.display = "block";
-                channelList.classList.add("active");
-                categoryList.style.display = "none";
-                categoryList.classList.remove("active");
-                categoriesButton.style.display = "block"; // Ensure button is visible
-            }, 500);
+    function validateInputs(fields) {
+      for (const [id, value] of Object.entries(fields)) {
+        if (!value.trim()) {
+          alert(`❌ ${id} cannot be empty.`);
+          return false;
         }
+      }
+      return true;
+    }
 
-        function selectChannel(channel) {
-            videoPlayer.style.opacity = "0";
-            setTimeout(() => {
-                if (Hls.isSupported()) {
-                    const hls = new Hls();
-                    hls.loadSource(channel.url);
-                    hls.attachMedia(videoPlayer);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        videoPlayer.play().catch(error => console.error("Playback error:", error));
-                        videoPlayer.style.opacity = "1";
-                    });
-                } else if (videoPlayer.canPlayType("application/vnd.apple.mpegurl")) {
-                    videoPlayer.src = channel.url;
-                    videoPlayer.addEventListener("loadedmetadata", () => {
-                        videoPlayer.play().catch(error => console.error("Playback error:", error));
-                        videoPlayer.style.opacity = "1";
-                    });
-                } else {
-                    alert("Your browser does not support HLS streaming.");
-                }
-
-                const channelItems = channelList.getElementsByClassName("channel-item");
-                for (let i = 0; i < channelItems.length; i++) {
-                    channelItems[i].classList.remove("active");
-                }
-                const activeChannelItem = Array.from(channelItems).find(item => item.querySelector('.channel-name').textContent === channel.name);
-                if (activeChannelItem) {
-                    activeChannelItem.classList.add("active");
-                }
-            }, 300);
-        }
-
-        function showCategories() {
-            channelList.style.display = "none";
-            channelList.classList.remove("active");
-            categoryList.style.display = "block";
-            categoryList.classList.add("active");
-            categoriesButton.style.display = "none";
-        }
-
-        // Add this function to reset to homepage
-        function goToHomepage() {
-            // Hide channel list and show categories
-            channelList.style.display = "none";
-            channelList.classList.remove("active");
-            categoryList.style.display = "block";
-            categoryList.classList.add("active");
-            categoriesButton.style.display = "none";
-            // Optionally, stop video playback and hide player
-            videoPlayer.pause();
-            videoPlayer.removeAttribute('src');
-            videoPlayer.load();
-            // Remove or comment out the next line to keep the player visible:
-            // videoPlayer.style.opacity = "0";
-            videoPlayer.style.opacity = "1"; // Always show the player
-        }
-
-        categoryList.addEventListener("click", (e) => {
-            if (e.target.classList.contains("category-item")) {
-                const category = e.target.getAttribute("data-category");
-                loadChannels(category);
-            }
+    async function fetchNotification() {
+      if (!githubToken) {
+        alert("❌ Please enter a GitHub Personal Access Token to fetch the notification.");
+        showTokenPrompt();
+        return false;
+      }
+      try {
+        const res = await fetch(`${notificationUrl}?t=${new Date().getTime()}`, {
+          headers: { Authorization: `Bearer ${githubToken}` }
         });
+        if (!res.ok) {
+          if (res.status === 404) {
+            console.warn("Notification file not found, initializing empty object.");
+            notificationData = {
+              notification_message: "",
+              notification_visible: false,
+              last_updated: getCurrentUTCTime()
+            };
+            return true;
+          }
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        const text = await res.text();
+        if (!text) {
+          console.warn("Notification file is empty, initializing empty object.");
+          notificationData = {
+            notification_message: "",
+            notification_visible: false,
+            last_updated: getCurrentUTCTime()
+          };
+          return true;
+        }
+        notificationData = JSON.parse(text);
+        return true;
+      } catch (error) {
+        console.error("Error fetching notification:", error);
+        notificationData = {
+          notification_message: "",
+          notification_visible: false,
+          last_updated: getCurrentUTCTime()
+        };
+        alert("❌ Failed to fetch notification. Check token permissions for private repo. Error: " + error.message);
+        return false;
+      }
+    }
 
-        categoriesButton.addEventListener("click", showCategories);
-        homeTitle.addEventListener("click", goToHomepage); // Add this line
+    async function publishToGitHub(updatedJson) {
+      if (!githubToken) {
+        alert("❌ Please enter a GitHub Personal Access Token to publish changes.");
+        showTokenPrompt();
+        return false;
+      }
+      try {
+        const apiUrl = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
+        let sha;
+        try {
+          const current = await fetch(apiUrl, {
+            headers: { Authorization: `Bearer ${githubToken}` }
+          });
+          if (current.ok) {
+            const data = await current.json();
+            sha = data.sha;
+          } else if (current.status === 404) {
+            console.warn(`File ${filePath} not found on GitHub, creating new.`);
+            sha = null;
+          } else {
+            throw new Error(`HTTP error! Status: ${current.status}`);
+          }
+        } catch (error) {
+          console.error("Error fetching SHA:", error);
+          alert("❌ Failed to fetch file metadata. Check token permissions for private repo. Error: " + error.message);
+          return false;
+        }
+        const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(updatedJson, null, 2))));
+        const pushRes = await fetch(apiUrl, {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${githubToken}`, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            message: `Update ${filePath} via Notification Manager UI`,
+            content: encoded,
+            sha: sha,
+            branch: branch
+          })
+        });
+        if (!pushRes.ok) {
+          throw new Error(`HTTP error! Status: ${pushRes.status}`);
+        }
+        alert("✅ Changes published successfully!");
+        return true;
+      } catch (error) {
+        console.error("Error publishing to GitHub:", error);
+        alert("❌ Publish failed. Check token permissions for private repo. Error: " + error.message);
+        return false;
+      }
+    }
 
-        // Ensure categories are visible on page load
-        categoryList.style.display = "block";
-        categoryList.classList.add("active");
-        channelList.style.display = "none";
-        channelList.classList.remove("active");
-        categoriesButton.style.display = "none";
-    </script>
+    async function previewNotification() {
+      if (await fetchNotification()) {
+        document.getElementById("previewSection").innerHTML = `
+          <h3 class="section-title">Preview Notification</h3>
+          <textarea readonly>${JSON.stringify(notificationData, null, 2)}</textarea>
+        `;
+      }
+    }
+
+    function showTokenPrompt() {
+      document.getElementById("formSection").innerHTML = `
+        <h3 class="section-title">Enter GitHub Personal Access Token</h3>
+        <input type="password" id="githubToken" placeholder="GitHub Personal Access Token" />
+        <p class="note">Token requires 'repo' scope for private repo access. Generate at https://github.com/settings/tokens.</p>
+        <button onclick="saveToken()">✅ Save Token</button>
+      `;
+    }
+
+    function saveToken() {
+      const token = document.getElementById("githubToken").value.trim();
+      if (!token) {
+        alert("❌ GitHub Personal Access Token cannot be empty.");
+        return;
+      }
+      githubToken = token;
+      document.getElementById("formSection").innerHTML = '';
+      alert("✅ Token saved. You can now fetch or publish changes.");
+    }
+
+    function showEditForm() {
+      fetchNotification().then(() => {
+        document.getElementById("formSection").innerHTML = `
+          <h3 class="section-title">Edit Notification</h3>
+          <input type="text" id="notificationMessage" value="${notificationData.notification_message || ''}" placeholder="Notification Message" />
+          <label><input type="checkbox" id="notificationVisible" ${notificationData.notification_visible ? 'checked' : ''}> Visible</label>
+          <input type="text" id="lastUpdated" value="${notificationData.last_updated || getCurrentUTCTime()}" readonly />
+          <p class="note">Last updated will be set to current UTC time on save.</p>
+          <button onclick="previewEdit()">✅ Preview Edit</button>
+          <button onclick="publishEdit()">🚀 Publish</button>
+        `;
+      });
+    }
+
+    function previewEdit() {
+      const fields = {
+        "Notification Message": document.getElementById("notificationMessage").value.trim()
+      };
+      if (!validateInputs(fields)) return;
+
+      const newData = {
+        notification_message: fields["Notification Message"],
+        notification_visible: document.getElementById("notificationVisible").checked,
+        last_updated: getCurrentUTCTime()
+      };
+
+      document.getElementById("previewSection").innerHTML = `
+        <h3 class="section-title">Preview Edited Notification</h3>
+        <textarea readonly>${JSON.stringify(newData, null, 2)}</textarea>
+      `;
+    }
+
+    async function publishEdit() {
+      const fields = {
+        "Notification Message": document.getElementById("notificationMessage").value.trim()
+      };
+      if (!validateInputs(fields)) return;
+
+      const updatedData = {
+        notification_message: fields["Notification Message"],
+        notification_visible: document.getElementById("notificationVisible").checked,
+        last_updated: getCurrentUTCTime()
+      };
+
+      if (await publishToGitHub(updatedData)) {
+        notificationData = updatedData;
+        await previewNotification();
+      }
+    }
+  </script>
 </body>
 </html>
